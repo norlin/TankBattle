@@ -36,3 +36,12 @@ ATank* ATankAIController::GetPlayerTank() const {
 	
 	return PlayerTank;
 }
+
+void ATankAIController::Tick(float DeltaSeconds) {
+	Super::Tick(DeltaSeconds);
+	
+	auto PlayerTank = GetPlayerTank();
+	if (PlayerTank) {
+		GetControlledTank()->AimAt(PlayerTank->GetActorLocation());
+	}
+}
