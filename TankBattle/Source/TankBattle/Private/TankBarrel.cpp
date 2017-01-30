@@ -4,7 +4,9 @@
 #include "TankBarrel.h"
 
 
-void UTankBarrel::Elevate(float DegreesPerSecond) {
-	UE_LOG(LogTemp, Warning, TEXT("Elevate to %f"), DegreesPerSecond);
+void UTankBarrel::Elevate(float RelativeSpeed) {
+
+	auto time = GetWorld()->GetTimeSeconds();
+	UE_LOG(LogTemp, Warning, TEXT("%f: Elevate to %f"), time, RelativeSpeed);
 }
 
