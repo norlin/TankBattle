@@ -2,8 +2,11 @@
 
 #pragma once
 
+#include "AimComponent.h"
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
+
+class UTankBarrel;
 
 UCLASS()
 class TANKBATTLE_API ATank : public APawn
@@ -12,6 +15,12 @@ class TANKBATTLE_API ATank : public APawn
 	
 public:
 	void AimAt(FVector HitLocation);
+	
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetBarrelReference(UTankBarrel* Barrel);
+	
+protected:
+	UAimComponent* TankAimComponent = nullptr;
 
 private:
 	// Sets default values for this pawn's properties
@@ -26,6 +35,7 @@ private:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
-	
+	UPROPERTY(EditAnywhere, Category = Firing)
+	float LaunchSpeed = 100000; // 1000 m/s
 	
 };
