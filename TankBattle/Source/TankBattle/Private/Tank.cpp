@@ -44,10 +44,10 @@ void ATank::SetTurretReference(UTankTurret* NewTurret) {
 }
 
 void ATank::Fire() {
-	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTime;
+	bool isReloaded = (GetWorld()->GetTimeSeconds() - LastFireTime) > ReloadTime;
 	
 	if (Barrel && isReloaded) {
-		LastFireTime = FPlatformTime::Seconds();
+		LastFireTime = GetWorld()->GetTimeSeconds();
 		
 		FVector SpawnLocation = Barrel->GetSocketLocation(FName("Projectile"));
 		FRotator SpawnRotation = Barrel->GetSocketRotation(FName("Projectile"));
