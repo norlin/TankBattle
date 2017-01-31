@@ -4,9 +4,6 @@
 #include "TankTurret.h"
 
 void UTankTurret::Rotate(float RelativeSpeed) {
-	auto time = GetWorld()->GetTimeSeconds();
-	UE_LOG(LogTemp, Warning, TEXT("%f: Rotate to %f"), time, RelativeSpeed);
-	
 	RelativeSpeed = FMath::Clamp<float>(RelativeSpeed, -1, 1);
 	auto RotationChange = RelativeSpeed * MaxDegreesPerSecond * GetWorld()->DeltaTimeSeconds;
 	auto RawNewRotation = RelativeRotation.Yaw + RotationChange;

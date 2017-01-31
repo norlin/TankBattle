@@ -22,6 +22,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetBarrelReference(UTankBarrel* Barrel);
 	
+	UFUNCTION(BlueprintCallable, Category = Input)
+	void Fire();
+	
 protected:
 	UAimComponent* TankAimComponent = nullptr;
 
@@ -37,5 +40,4 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = Firing)
 	float LaunchSpeed = 4000; // 40 m/s
-	
 };

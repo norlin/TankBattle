@@ -10,8 +10,6 @@ void ATankPlayerController::BeginPlay() {
 	auto ControlledTank = GetControlledTank();
 	if (!ControlledTank) {
 		UE_LOG(LogTemp, Error, TEXT("Not possesing a tank!"));
-	} else {
-		UE_LOG(LogTemp, Warning, TEXT("Tank possessing: %s!"), *(ControlledTank->GetName()));
 	}
 	
 }
@@ -34,8 +32,6 @@ void ATankPlayerController::AimTowardsCrosshair() {
 	FVector HitLocation;
 	if (GetSightLocation(HitLocation)) {
 		GetControlledTank()->AimAt(HitLocation);
-	} else {
-		UE_LOG(LogTemp, Error, TEXT("Sight vector don't hit earth!"));
 	}
 }
 

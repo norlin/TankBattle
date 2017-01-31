@@ -37,9 +37,6 @@ void UAimComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
 	if (foundVelocity) {
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrel(AimDirection);
-	} else {
-		auto time = GetWorld()->GetTimeSeconds();
-		UE_LOG(LogTemp, Warning, TEXT("%f: No aim solution found"), time);
 	}
 }
 
