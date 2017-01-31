@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankBattle.h"
+#include "TankTurret.h"
 #include "TankBarrel.h"
 #include "AimComponent.h"
 
@@ -15,15 +16,19 @@ UAimComponent::UAimComponent()
 	// ...
 }
 
-void UAimComponent::SetBarrelReference(UTankBarrel* Barrel) {
-	this->Barrel = Barrel;
+void UAimComponent::SetBarrelReference(UTankBarrel* NewBarrel) {
+	Barrel = NewBarrel;
+}
+
+void UAimComponent::SetTurretReference(UTankTurret* NewTurret) {
+	Turret = NewTurret;
 }
 
 void UAimComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
-	if (!Barrel) {
+	if (!Barrel || !Turret) {
 		return;
 	}
-	
+
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
 	
@@ -44,6 +49,7 @@ void UAimComponent::MoveBarrel(FVector AimDirection) {
 	auto DeltaRotator = AimRotator - CurrentRotator;
 	
 	Barrel->Elevate(DeltaRotator.Pitch);
+	Turret->Rotate(DeltaRotator.Yaw);
 }
 
 

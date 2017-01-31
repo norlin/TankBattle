@@ -5,6 +5,7 @@
 #include "Components/ActorComponent.h"
 #include "AimComponent.generated.h"
 
+class UTankTurret;
 class UTankBarrel;
 
 UCLASS( ClassGroup=(Tank), meta=(BlueprintSpawnableComponent) )
@@ -16,10 +17,12 @@ public:
 	// Sets default values for this component's properties
 	UAimComponent();
 
-	void SetBarrelReference(UTankBarrel* Barrel);
+	void SetTurretReference(UTankTurret* NewTurret);
+	void SetBarrelReference(UTankBarrel* NewBarrel);
 	void AimAt(FVector HitLocation, float LaunchSpeed);
 	
 private:
+	UTankTurret* Turret = nullptr;
 	UTankBarrel* Barrel = nullptr;
 	
 	void MoveBarrel(FVector AimDirection);
