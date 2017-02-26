@@ -6,6 +6,7 @@
 #include "Tank.generated.h"
 
 class UAimComponent;
+class UTankMovementComponent;
 class UTankBarrel;
 class AProjectile;
 
@@ -28,6 +29,9 @@ public:
 	
 protected:
 	UAimComponent* TankAimComponent = nullptr;
+
+	UPROPERTY(BlueprintReadOnly)
+	UTankMovementComponent* TankMovementComponent = nullptr;
 
 private:
 	// Sets default values for this pawn's properties
