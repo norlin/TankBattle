@@ -15,5 +15,5 @@ public:
 	void SetThrottle(float Throttle);
 	
 	UPROPERTY(EditDefaultsOnly)
-	float TrackMaxForce = 400000; // assume 40 tonne tank and 1g acceleration
+	float TrackMaxForce = 40000; // assume 40 tonne tank and 1g acceleration
 };
