@@ -2,12 +2,18 @@
 
 #include "TankBattle.h"
 #include "Tank.h"
+#include "AimComponent.h"
 #include "TankPlayerController.h"
 
 void ATankPlayerController::BeginPlay() {
 	Super::BeginPlay();
 	
-	
+	auto AimComponent = GetControlledTank()->FindComponentByClass<UTankAimComponent>();
+	if (AimComponent) {
+		FoundAimingComponent(AimComponent);
+	} else {
+		UE_LOG(LogTemp, Warning, TEXT("No AimComponent found!"));
+	}
 }
 
 ATank* ATankPlayerController::GetControlledTank() const {

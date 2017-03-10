@@ -5,26 +5,38 @@
 #include "Components/ActorComponent.h"
 #include "AimComponent.generated.h"
 
+UENUM()
+enum class EAimState: uint8
+{
+	Reloading,
+	Aiming,
+	Ready
+};
+
 class UTankTurret;
 class UTankBarrel;
+class AProjectile;
 
-UCLASS( ClassGroup=(Tank), meta=(BlueprintSpawnableComponent) )
-class TANKBATTLE_API UAimComponent : public UActorComponent
+UCLASS(ClassGroup = (Tank), meta = (BlueprintSpawnableComponent))
+class TANKBATTLE_API UTankAimComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
-	UAimComponent();
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void Initialise(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet);
 
-	void SetTurretReference(UTankTurret* NewTurret);
-	void SetBarrelReference(UTankBarrel* NewBarrel);
 	void AimAt(FVector HitLocation, float LaunchSpeed);
+
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "State")
+	EAimState AimState = EAimState::Ready;
 	
 private:
+	UTankAimComponent();
+
 	UTankTurret* Turret = nullptr;
 	UTankBarrel* Barrel = nullptr;
 	
 	void MoveBarrel(FVector AimDirection);
-	
 };

@@ -5,26 +5,18 @@
 #include "TankBarrel.h"
 #include "AimComponent.h"
 
-
-// Sets default values for this component's properties
-UAimComponent::UAimComponent()
+UTankAimComponent::UTankAimComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	bWantsBeginPlay = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UAimComponent::SetBarrelReference(UTankBarrel* NewBarrel) {
-	Barrel = NewBarrel;
+void UTankAimComponent::Initialise(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet) {
+	Turret = TurretToSet;
+	Barrel = BarrelToSet;
 }
 
-void UAimComponent::SetTurretReference(UTankTurret* NewTurret) {
-	Turret = NewTurret;
-}
-
-void UAimComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
+void UTankAimComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
 	if (!Barrel || !Turret) {
 		return;
 	}
@@ -35,12 +27,18 @@ void UAimComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
 	auto foundVelocity = UGameplayStatics::SuggestProjectileVelocity(this, OutLaunchVelocity, StartLocation, HitLocation, LaunchSpeed, false, 0, 0, ESuggestProjVelocityTraceOption::DoNotTrace);
 	
 	if (foundVelocity) {
+		//AimState = EAimState::Aiming;
+
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrel(AimDirection);
 	}
 }
 
-void UAimComponent::MoveBarrel(FVector AimDirection) {
+void UTankAimComponent::MoveBarrel(FVector AimDirection) {
+	if (!Barrel || !Turret) {
+		return;
+	}
+
 	auto CurrentRotator = Barrel->GetForwardVector().Rotation();
 	auto AimRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimRotator - CurrentRotator;
@@ -48,5 +46,6 @@ void UAimComponent::MoveBarrel(FVector AimDirection) {
 	Barrel->Elevate(DeltaRotator.Pitch);
 	Turret->Rotate(DeltaRotator.Yaw);
 }
+
 
 
