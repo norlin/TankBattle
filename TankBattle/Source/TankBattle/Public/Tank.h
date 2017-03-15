@@ -6,14 +6,12 @@
 #include "Tank.generated.h"
 
 class UTankAimComponent;
-class UTankMovementComponent;
 class UTankBarrel;
 class AProjectile;
 
 UCLASS()
 class TANKBATTLE_API ATank : public APawn {
 	GENERATED_BODY()
-
 public:
 	void AimAt(FVector HitLocation);
 
@@ -23,9 +21,6 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 	UTankAimComponent* TankAimComponent = nullptr;
-
-	UPROPERTY(BlueprintReadOnly)
-	UTankMovementComponent* TankMovementComponent = nullptr;
 
 private:
 	// Sets default values for this pawn's properties
