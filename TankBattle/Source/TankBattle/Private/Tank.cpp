@@ -9,9 +9,8 @@
 
 
 // Sets default values
-ATank::ATank()
-{
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ATank::ATank() {
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 }
 
@@ -22,17 +21,20 @@ void ATank::BeginPlay() {
 }
 
 void ATank::AimAt(FVector HitLocation) {
-	if (!TankAimComponent)
-	{
+	if (!ensure(TankAimComponent)) {
 		return;
 	}
 	TankAimComponent->AimAt(HitLocation, LaunchSpeed);
 }
 
 void ATank::Fire() {
+	if (!ensure(Barrel)) {
+		return;
+	}
+
 	bool isReloaded = (GetWorld()->GetTimeSeconds() - LastFireTime) > ReloadTime;
 
-	if (Barrel && isReloaded) {
+	if (isReloaded) {
 		LastFireTime = GetWorld()->GetTimeSeconds();
 
 		FVector SpawnLocation = Barrel->GetSocketLocation(FName("Projectile"));

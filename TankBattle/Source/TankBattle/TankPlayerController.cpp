@@ -9,7 +9,7 @@ void ATankPlayerController::BeginPlay() {
 	Super::BeginPlay();
 	
 	auto AimComponent = GetControlledTank()->FindComponentByClass<UTankAimComponent>();
-	if (AimComponent) {
+	if (ensure(AimComponent)) {
 		FoundAimingComponent(AimComponent);
 	} else {
 		UE_LOG(LogTemp, Warning, TEXT("No AimComponent found!"));
