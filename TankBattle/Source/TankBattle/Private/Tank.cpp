@@ -16,7 +16,7 @@ ATank::ATank() {
 void ATank::BeginPlay() {
 	Super::BeginPlay();
 
-	TankAimComponent = Cast<UTankAimComponent>(GetComponentByClass(UTankAimComponent::StaticClass()));
+	TankAimComponent = FindComponentByClass<UTankAimComponent>();
 }
 
 void ATank::AimAt(FVector HitLocation) {
@@ -27,9 +27,14 @@ void ATank::AimAt(FVector HitLocation) {
 }
 
 void ATank::Fire() {
+	auto name = GetName();
+	UE_LOG(LogTemp, Warning, TEXT("Fire! %s"), *name);
 	if (!ensure(Barrel)) {
+		UE_LOG(LogTemp, Warning, TEXT("Fire: No barrel!"));
 		return;
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Fire available!"));
 
 	bool isReloaded = (GetWorld()->GetTimeSeconds() - LastFireTime) > ReloadTime;
 
