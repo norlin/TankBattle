@@ -6,8 +6,7 @@
 #include "AimComponent.generated.h"
 
 UENUM()
-enum class EAimState: uint8
-{
+enum class EAimState: uint8 {
 	Reloading,
 	Aiming,
 	Ready
@@ -18,11 +17,10 @@ class UTankBarrel;
 class AProjectile;
 
 UCLASS(ClassGroup = (Tank), meta = (BlueprintSpawnableComponent))
-class TANKBATTLE_API UTankAimComponent : public UActorComponent
-{
+class TANKBATTLE_API UTankAimComponent : public UActorComponent {
 	GENERATED_BODY()
 
-public:	
+public:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void Initialise(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet);
 
@@ -31,12 +29,12 @@ public:
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EAimState AimState = EAimState::Ready;
-	
+
 private:
 	UTankAimComponent();
 
 	UTankTurret* Turret = nullptr;
 	UTankBarrel* Barrel = nullptr;
-	
+
 	void MoveBarrel(FVector AimDirection);
 };

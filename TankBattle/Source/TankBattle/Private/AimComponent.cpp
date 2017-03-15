@@ -5,8 +5,7 @@
 #include "TankBarrel.h"
 #include "AimComponent.h"
 
-UTankAimComponent::UTankAimComponent()
-{
+UTankAimComponent::UTankAimComponent() {
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = false;
 }
@@ -23,9 +22,9 @@ void UTankAimComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
 
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
-	
+
 	auto foundVelocity = UGameplayStatics::SuggestProjectileVelocity(this, OutLaunchVelocity, StartLocation, HitLocation, LaunchSpeed, false, 0, 0, ESuggestProjVelocityTraceOption::DoNotTrace);
-	
+
 	if (ensure(foundVelocity)) {
 		//AimState = EAimState::Aiming;
 
@@ -42,10 +41,7 @@ void UTankAimComponent::MoveBarrel(FVector AimDirection) {
 	auto CurrentRotator = Barrel->GetForwardVector().Rotation();
 	auto AimRotator = AimDirection.Rotation();
 	auto DeltaRotator = AimRotator - CurrentRotator;
-	
+
 	Barrel->Elevate(DeltaRotator.Pitch);
 	Turret->Rotate(DeltaRotator.Yaw);
 }
-
-
-

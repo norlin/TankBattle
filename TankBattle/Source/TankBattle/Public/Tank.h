@@ -11,16 +11,15 @@ class UTankBarrel;
 class AProjectile;
 
 UCLASS()
-class TANKBATTLE_API ATank : public APawn
-{
+class TANKBATTLE_API ATank : public APawn {
 	GENERATED_BODY()
-	
+
 public:
 	void AimAt(FVector HitLocation);
 
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void Fire();
-	
+
 protected:
 	UPROPERTY(EditAnywhere)
 	UTankAimComponent* TankAimComponent = nullptr;

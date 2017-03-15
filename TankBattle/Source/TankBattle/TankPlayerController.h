@@ -11,10 +11,9 @@ class ATank;
  * 
  */
 UCLASS()
-class TANKBATTLE_API ATankPlayerController : public APlayerController
-{
+class TANKBATTLE_API ATankPlayerController : public APlayerController {
 	GENERATED_BODY()
-	
+
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	ATank* GetControlledTank() const;
@@ -27,18 +26,18 @@ private:
 	virtual void Tick(float DeltaSeconds) override;
 
 	void AimTowardsCrosshair();
-	
-	bool GetSightLocation(FVector &HitLocation) const;
-	bool GetLookDirection(FVector2D ScreenLocation, FVector &LookDirection) const;
-	bool GetLookVectorHitLocation(FVector LookDirection, FVector &HitLocation) const;
-	
+
+	bool GetSightLocation(FVector& HitLocation) const;
+	bool GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const;
+	bool GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const;
+
 	UPROPERTY(EditDefaultsOnly)
 	float CrosshairPosX = 0.5;
-	
+
 	UPROPERTY(EditDefaultsOnly)
 	float CrosshairPosY = 0.333;
-	
+
 	UPROPERTY(EditDefaultsOnly)
 	float SightDistance = 1000000.0;
-	
+
 };
