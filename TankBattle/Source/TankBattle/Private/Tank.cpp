@@ -1,8 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankBattle.h"
-#include "Projectile.h"
-#include "TankBarrel.h"
 #include "Tank.h"
 
 
@@ -16,26 +14,3 @@ void ATank::BeginPlay() {
 	Super::BeginPlay();
 }
 
-void ATank::Fire() {
-	auto name = GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Fire! %s"), *name);
-	if (!ensure(Barrel)) {
-		UE_LOG(LogTemp, Warning, TEXT("Fire: No barrel!"));
-		return;
-	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Fire available!"));
-
-	bool isReloaded = (GetWorld()->GetTimeSeconds() - LastFireTime) > ReloadTime;
-
-	if (isReloaded) {
-		LastFireTime = GetWorld()->GetTimeSeconds();
-
-		FVector SpawnLocation = Barrel->GetSocketLocation(FName("Projectile"));
-		FRotator SpawnRotation = Barrel->GetSocketRotation(FName("Projectile"));
-
-		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SpawnLocation, SpawnRotation);
-
-		Projectile->LaunchProjectile(LaunchSpeed);
-	}
-}

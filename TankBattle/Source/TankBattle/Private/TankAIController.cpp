@@ -24,6 +24,5 @@ void ATankAIController::Tick(float DeltaSeconds) {
 	AimComponent->AimAt(PlayerTank->GetActorLocation());
 		
 	// TODO: call Fire only after aiming completed
-	// TODO: fix firing
-	// ControlledTank->Fire();
+	AimComponent->Fire();
 }
