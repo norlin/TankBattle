@@ -6,7 +6,6 @@
 #include "AimComponent.h"
 
 UTankAimComponent::UTankAimComponent() {
-	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
@@ -15,7 +14,7 @@ void UTankAimComponent::Initialise(UTankTurret* TurretToSet, UTankBarrel* Barrel
 	Barrel = BarrelToSet;
 }
 
-void UTankAimComponent::AimAt(FVector HitLocation, float LaunchSpeed) {
+void UTankAimComponent::AimAt(FVector HitLocation) {
 	if (!ensure(Barrel) || !ensure(Turret)) {
 		return;
 	}
