@@ -4,7 +4,6 @@
 #include "AimComponent.h"
 #include "TankAIController.h"
 
-
 void ATankAIController::BeginPlay() {
 	Super::BeginPlay();
 }
@@ -12,17 +11,19 @@ void ATankAIController::BeginPlay() {
 void ATankAIController::Tick(float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
 
-	auto PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
+	auto ControlledTank = GetPawn();
 
-	if (ensure(PlayerTank)) {
-		MoveToActor(PlayerTank, AcceptanceRadius);
-
-		auto Tank = Cast<ATank>(GetPawn());
-
-		auto AimComponent = Tank->FindComponentByClass<UTankAimComponent>();
-		AimComponent->AimAt(PlayerTank->GetActorLocation());
-		
-		// TODO: call Fire only after aiming completed
-		Tank->Fire();
+	if (!ensure(PlayerTank) || !ensure(ControlledTank)) {
+		return;
 	}
+
+	MoveToActor(PlayerTank, AcceptanceRadius);
+
+	auto AimComponent = ControlledTank->FindComponentByClass<UTankAimComponent>();
+	AimComponent->AimAt(PlayerTank->GetActorLocation());
+		
+	// TODO: call Fire only after aiming completed
+	// TODO: fix firing
+	// ControlledTank->Fire();
 }
