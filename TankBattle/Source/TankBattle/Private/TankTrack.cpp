@@ -24,6 +24,7 @@ void UTankTrack::ApplySidewayForce() {
 }
 
 void UTankTrack::DriveTank() {
+	// TODO: fix moving & rotating at the same time
 	auto ForceApplied = GetForwardVector() * CurrentThrottle * TrackMaxForce;
 	auto ForceLocation = GetComponentLocation();
 
