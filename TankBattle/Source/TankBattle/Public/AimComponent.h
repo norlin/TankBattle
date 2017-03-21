@@ -31,12 +31,16 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EAimState AimState = EAimState::Ready;
+	EAimState AimState = EAimState::Reloading;
 
 private:
 	UTankAimComponent();
 
+	virtual void BeginPlay() override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
+
 	void MoveBarrel(FVector AimDirection);
+	bool isBarrelMoving();
 
 	UTankTurret* Turret = nullptr;
 	UTankBarrel* Barrel = nullptr;
@@ -51,4 +55,5 @@ private:
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	double LastFireTime = 0;
+	FVector AimDirection = FVector::ZeroVector;
 };

@@ -7,12 +7,26 @@
 #include "AimComponent.h"
 
 UTankAimComponent::UTankAimComponent() {
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
+}
+
+void UTankAimComponent::BeginPlay() {
+	LastFireTime = GetWorld()->GetTimeSeconds();
 }
 
 void UTankAimComponent::Initialise(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet) {
 	Turret = TurretToSet;
 	Barrel = BarrelToSet;
+}
+
+void UTankAimComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
+	if ((GetWorld()->GetTimeSeconds() - LastFireTime) < ReloadTime) {
+		AimState = EAimState::Reloading;
+	} else if (isBarrelMoving()) {
+		AimState = EAimState::Aiming;
+	} else {
+		AimState = EAimState::Ready;
+	}
 }
 
 void UTankAimComponent::AimAt(FVector HitLocation) {
@@ -26,17 +40,13 @@ void UTankAimComponent::AimAt(FVector HitLocation) {
 	auto foundVelocity = UGameplayStatics::SuggestProjectileVelocity(this, OutLaunchVelocity, StartLocation, HitLocation, LaunchSpeed, false, 0, 0, ESuggestProjVelocityTraceOption::DoNotTrace);
 
 	if (foundVelocity) {
-		AimState = EAimState::Aiming;
-
-		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrel(AimDirection);
-	} else {
-		AimState = EAimState::Ready;
 	}
 }
 
 void UTankAimComponent::MoveBarrel(FVector AimDirection) {
-	if (!ensure(Barrel || !Turret)) {
+	if (!ensure(Barrel) || !ensure(Turret)) {
 		return;
 	}
 
@@ -48,24 +58,23 @@ void UTankAimComponent::MoveBarrel(FVector AimDirection) {
 	Turret->Rotate(DeltaRotator.Yaw);
 }
 
+bool UTankAimComponent::isBarrelMoving() {
+	if (!ensure(Barrel) || !ensure(Turret)) {
+		return false;
+	}
+
+	auto BarrelForward = Barrel->GetForwardVector();
+
+	return !BarrelForward.Equals(AimDirection, 0.01);
+}
+
 void UTankAimComponent::Fire() {
 	auto name = GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Fire! %s"), *name);
-	if (!ensure(Barrel)) {
-		UE_LOG(LogTemp, Warning, TEXT("Fire: No barrel!"));
+	if (!ensure(Barrel) || !ensure(ProjectileBlueprint)) {
 		return;
 	}
 
-	if (!ensure(ProjectileBlueprint)) {
-		UE_LOG(LogTemp, Warning, TEXT("Fire: No Projectile!"));
-		return;
-	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Fire available!"));
-
-	bool isReloaded = (GetWorld()->GetTimeSeconds() - LastFireTime) > ReloadTime;
-
-	if (isReloaded) {
+	if (AimState!=EAimState::Reloading) {
 		LastFireTime = GetWorld()->GetTimeSeconds();
 
 		FVector SpawnLocation = Barrel->GetSocketLocation(FName("Projectile"));
