@@ -4,11 +4,15 @@
 #include "TankTrack.h"
 
 UTankTrack::UTankTrack() {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UTankTrack::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+void UTankTrack::BeginPlay() {
+	OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
+}
+
+void UTankTrack::ApplySidewayForce() {
+	auto DeltaTime = GetWorld()->GetDeltaSeconds();
 
 	auto SlippageSpeed = FVector::DotProduct(GetRightVector(), GetComponentVelocity());
 	auto CorrectionAcceleration = -SlippageSpeed / DeltaTime * GetRightVector();
@@ -19,14 +23,21 @@ void UTankTrack::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 	tank->AddForce(CorrectionForce);
 }
 
-void UTankTrack::SetThrottle(float Throttle) {
-	auto ForceApplied = GetForwardVector() * Throttle * TrackMaxForce;
+void UTankTrack::DriveTank() {
+	auto ForceApplied = GetForwardVector() * CurrentThrottle * TrackMaxForce;
 	auto ForceLocation = GetComponentLocation();
 
-	//UE_LOG(LogTemp, Warning, TEXT("%s, %s, %s, %f, %f"), *GetOwner()->GetName(), *ForceApplied.ToString(), *GetForwardVector().ToString(), Throttle, TrackMaxForce)
+	//DrawDebugLine(GetWorld(), ForceLocation, ForceApplied, FColor::Blue, false, -1.f, 0, 50.f);
 
 	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);
+}
 
-	DrawDebugLine(GetWorld(), ForceLocation, ForceApplied, FColor::Blue, false, -1.f, 0, 50.f);
+void UTankTrack::SetThrottle(float Throttle) {
+	CurrentThrottle = FMath::Clamp<float>(CurrentThrottle+Throttle, -1, 1);
+}
+
+void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult &Hit) {
+	DriveTank();
+	ApplySidewayForce();
 }
