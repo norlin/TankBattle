@@ -85,3 +85,7 @@ void UTankAimComponent::Fire() {
 		Projectile->LaunchProjectile(LaunchSpeed);
 	}
 }
+
+EAimState UTankAimComponent::GetState() const {
+	return AimState;
+}

@@ -29,6 +29,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firing")
 	void Fire();
 
+	EAimState GetState() const;
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EAimState AimState = EAimState::Reloading;

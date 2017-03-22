@@ -24,5 +24,7 @@ void ATankAIController::Tick(float DeltaSeconds) {
 	AimComponent->AimAt(PlayerTank->GetActorLocation());
 		
 	// TODO: call Fire only after aiming completed
-	AimComponent->Fire();
+	if (AimComponent->GetState() == EAimState::Ready) {
+		AimComponent->Fire();
+	}
 }
