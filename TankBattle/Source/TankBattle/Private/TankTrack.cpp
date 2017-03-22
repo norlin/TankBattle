@@ -20,25 +20,27 @@ void UTankTrack::ApplySidewayForce() {
 	auto tank = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
 	auto CorrectionForce = (tank->GetMass() * CorrectionAcceleration) / 2;
 
+	DrawDebugLine(GetWorld(), tank->GetComponentLocation(), CorrectionForce, FColor::Red, false, -1.f, 0, 50.f);
+
 	tank->AddForce(CorrectionForce);
 }
 
 void UTankTrack::DriveTank() {
-	// TODO: fix moving & rotating at the same time
 	auto ForceApplied = GetForwardVector() * CurrentThrottle * TrackMaxForce;
 	auto ForceLocation = GetComponentLocation();
 
-	//DrawDebugLine(GetWorld(), ForceLocation, ForceApplied, FColor::Blue, false, -1.f, 0, 50.f);
+	DrawDebugLine(GetWorld(), ForceLocation, ForceApplied, FColor::Blue, false, -1.f, 0, 50.f);
 
 	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);
 }
 
 void UTankTrack::SetThrottle(float Throttle) {
-	CurrentThrottle = FMath::Clamp<float>(CurrentThrottle+Throttle, -1, 1);
+	CurrentThrottle = FMath::Clamp<float>(CurrentThrottle + FMath::Clamp<float>(Throttle, -1, 1), -2, 2);
 }
 
 void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult &Hit) {
 	DriveTank();
 	ApplySidewayForce();
+	CurrentThrottle = 0;
 }

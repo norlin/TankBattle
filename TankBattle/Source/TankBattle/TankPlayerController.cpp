@@ -45,9 +45,7 @@ bool ATankPlayerController::GetSightLocation(FVector& HitLocation) const {
 
 	FVector LookDirection;
 	if (GetLookDirection(AimPosition, LookDirection)) {
-		if (GetLookVectorHitLocation(LookDirection, HitLocation)) {
-			return true;
-		}
+		return GetLookVectorHitLocation(LookDirection, HitLocation);
 	}
 
 	return false;
