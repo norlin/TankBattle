@@ -9,7 +9,8 @@ UENUM()
 enum class EAimState: uint8 {
 	Reloading,
 	Aiming,
-	Ready
+	Ready,
+	OutOfAmmo
 };
 
 class UTankTurret;
@@ -29,11 +30,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firing")
 	void Fire();
 
+	UFUNCTION(BlueprintCallable, Category = "State")
 	EAimState GetState() const;
 
+	UFUNCTION(BlueprintCallable, Category = "State")
+	int GetAmmoLeft() const;
+
 protected:
-	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EAimState AimState = EAimState::Reloading;
 
 private:
 	UTankAimComponent();
@@ -47,6 +50,9 @@ private:
 	UTankTurret* Turret = nullptr;
 	UTankBarrel* Barrel = nullptr;
 
+
+	EAimState AimState = EAimState::Reloading;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float LaunchSpeed = 4000; // 40 m/s
 
@@ -55,6 +61,11 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AProjectile> ProjectileBlueprint;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	int AmmoCount = 3;
+
+	int AmmoLeft = 0;
 
 	double LastFireTime = 0;
 	FVector AimDirection = FVector::ZeroVector;

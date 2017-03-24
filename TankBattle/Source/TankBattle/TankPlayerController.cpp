@@ -7,6 +7,9 @@
 void ATankPlayerController::BeginPlay() {
 	Super::BeginPlay();
 
+	auto name = GetPawn()->GetName();
+	UE_LOG(LogTemp, Warning, TEXT("Player: %s"), *name);
+
 	auto AimComponent = GetPawn()->FindComponentByClass<UTankAimComponent>();
 	if (!ensure(AimComponent)) {
 		return;

@@ -12,6 +12,7 @@ UTankAimComponent::UTankAimComponent() {
 
 void UTankAimComponent::BeginPlay() {
 	LastFireTime = GetWorld()->GetTimeSeconds();
+	AmmoLeft = AmmoCount;
 }
 
 void UTankAimComponent::Initialise(UTankTurret* TurretToSet, UTankBarrel* BarrelToSet) {
@@ -20,6 +21,10 @@ void UTankAimComponent::Initialise(UTankTurret* TurretToSet, UTankBarrel* Barrel
 }
 
 void UTankAimComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
+	if (AmmoLeft == 0) {
+		AimState = EAimState::OutOfAmmo;
+		return;
+	}
 	if ((GetWorld()->GetTimeSeconds() - LastFireTime) < ReloadTime) {
 		AimState = EAimState::Reloading;
 	} else if (isBarrelMoving()) {
@@ -45,13 +50,13 @@ void UTankAimComponent::AimAt(FVector HitLocation) {
 	}
 }
 
-void UTankAimComponent::MoveBarrel(FVector AimDirection) {
+void UTankAimComponent::MoveBarrel(FVector AimDirectionToSet) {
 	if (!ensure(Barrel) || !ensure(Turret)) {
 		return;
 	}
 
 	auto CurrentRotator = Barrel->GetForwardVector().Rotation();
-	auto AimRotator = AimDirection.Rotation();
+	auto AimRotator = AimDirectionToSet.Rotation();
 	auto DeltaRotator = AimRotator - CurrentRotator;
 
 	Turret->Rotate(DeltaRotator.GetNormalized().Yaw);
@@ -69,16 +74,23 @@ bool UTankAimComponent::isBarrelMoving() {
 }
 
 void UTankAimComponent::Fire() {
-	auto name = GetName();
+	auto name = GetOwner()->GetName();
 	if (!ensure(Barrel) || !ensure(ProjectileBlueprint)) {
 		return;
 	}
 
-	if (AimState!=EAimState::Reloading) {
+	if (AimState == EAimState::OutOfAmmo) {
+		UE_LOG(LogTemp, Warning, TEXT("Out of Ammo!"));
+		return;
+	}
+
+	if (AimState == EAimState::Ready || AimState == EAimState::Aiming) {
 		LastFireTime = GetWorld()->GetTimeSeconds();
 
 		FVector SpawnLocation = Barrel->GetSocketLocation(FName("Projectile"));
 		FRotator SpawnRotation = Barrel->GetSocketRotation(FName("Projectile"));
+
+		AmmoLeft -= 1;
 
 		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, SpawnLocation, SpawnRotation);
 
@@ -88,4 +100,8 @@ void UTankAimComponent::Fire() {
 
 EAimState UTankAimComponent::GetState() const {
 	return AimState;
+}
+
+int UTankAimComponent::GetAmmoLeft() const {
+	return AmmoLeft;
 }
