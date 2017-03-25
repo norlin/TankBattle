@@ -34,7 +34,7 @@ public:
 	EAimState GetState() const;
 
 	UFUNCTION(BlueprintCallable, Category = "State")
-	int GetAmmoLeft() const;
+	int32 GetAmmoLeft() const;
 
 protected:
 
@@ -63,9 +63,9 @@ private:
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	int AmmoCount = 3;
+	int32 AmmoCount = 3;
 
-	int AmmoLeft = 0;
+	int32 AmmoLeft = 0;
 
 	double LastFireTime = 0;
 	FVector AimDirection = FVector::ZeroVector;

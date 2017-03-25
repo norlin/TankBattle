@@ -102,6 +102,6 @@ EAimState UTankAimComponent::GetState() const {
 	return AimState;
 }
 
-int UTankAimComponent::GetAmmoLeft() const {
+int32 UTankAimComponent::GetAmmoLeft() const {
 	return AmmoLeft;
 }
