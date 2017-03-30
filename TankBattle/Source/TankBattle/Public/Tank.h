@@ -9,9 +9,23 @@ UCLASS()
 class TANKBATTLE_API ATank : public APawn {
 	GENERATED_BODY()
 
-private:
+public:
 	// Sets default values for this pawn's properties
 	ATank();
+	void BeginPlay() override;
 
-	virtual void BeginPlay() override;
+	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+	UFUNCTION(BlueprintCallable, Category = "State")
+	float GetCurrentHealth() const;
+
+	UFUNCTION(BlueprintPure, Category = "State")
+	float GetHealthPercent() const;
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float Health = 100;
+
+	float CurrentHealth = 0;
+	
 };

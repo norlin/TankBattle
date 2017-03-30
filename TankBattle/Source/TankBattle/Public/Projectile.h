@@ -36,6 +36,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float DestroyTimeout = 1;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float Damage = 30;
+
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult &Hit);
 
