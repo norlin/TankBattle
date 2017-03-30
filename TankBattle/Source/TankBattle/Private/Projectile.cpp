@@ -28,9 +28,17 @@ AProjectile::AProjectile() {
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay() {
 	Super::BeginPlay();
+
+	CollisionMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
 
 void AProjectile::LaunchProjectile(float Speed) {
 	MovementComponent->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
 	MovementComponent->Activate();
+}
+
+void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult &Hit) {
+	UE_LOG(LogTemp, Warning, TEXT("Projectile hit!"));
+	LaunchBlast->Deactivate();
+	ImpactBlast->Activate(true);
 }
