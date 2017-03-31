@@ -50,5 +50,10 @@ void ATankAIController::SetPawn(APawn* InPawn) {
 }
 
 void ATankAIController::OnTankDeath() {
-	GetPawn()->DetachFromControllerPendingDestroy();
+	auto pawn = GetPawn();
+	if (!pawn) {
+		return;
+	}
+
+	pawn->DetachFromControllerPendingDestroy();
 }
