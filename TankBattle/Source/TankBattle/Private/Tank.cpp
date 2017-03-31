@@ -21,8 +21,8 @@ float ATank::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, ACo
 	CurrentHealth -= Damage;
 
 	if (CurrentHealth == 0.f) {
-		auto name = GetName();
-		UE_LOG(LogTemp, Warning, TEXT("%s is dead!"), *name);
+		UE_LOG(LogTemp, Warning, TEXT("Tank dead broadcast!"));
+		OnTankDeath.Broadcast();
 	}
 
 	return Damage;

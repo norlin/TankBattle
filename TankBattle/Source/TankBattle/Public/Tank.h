@@ -5,6 +5,8 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTankEvent);
+
 UCLASS()
 class TANKBATTLE_API ATank : public APawn {
 	GENERATED_BODY()
@@ -22,10 +24,12 @@ public:
 	UFUNCTION(BlueprintPure, Category = "State")
 	float GetHealthPercent() const;
 
+	FTankEvent OnTankDeath;
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float Health = 100;
 
 	float CurrentHealth = 0;
-	
+
 };
