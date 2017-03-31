@@ -20,7 +20,7 @@ void UTankTrack::ApplySidewayForce() {
 	auto tank = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
 	auto CorrectionForce = (tank->GetMass() * CorrectionAcceleration) / 2;
 
-	DrawDebugLine(GetWorld(), tank->GetComponentLocation(), CorrectionForce, FColor::Red, false, -1.f, 0, 50.f);
+	// DrawDebugLine(GetWorld(), tank->GetComponentLocation(), CorrectionForce, FColor::Red, false, -1.f, 0, 50.f);
 
 	tank->AddForce(CorrectionForce);
 }
@@ -29,7 +29,7 @@ void UTankTrack::DriveTank() {
 	auto ForceApplied = GetForwardVector() * CurrentThrottle * TrackMaxForce;
 	auto ForceLocation = GetComponentLocation();
 
-	DrawDebugLine(GetWorld(), ForceLocation, ForceApplied, FColor::Blue, false, -1.f, 0, 50.f);
+	// DrawDebugLine(GetWorld(), ForceLocation, ForceApplied, FColor::Blue, false, -1.f, 0, 50.f);
 
 	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);

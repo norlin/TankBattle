@@ -12,10 +12,15 @@ void ATankAIController::BeginPlay() {
 void ATankAIController::Tick(float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
 
-	auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
 	auto ControlledTank = GetPawn();
+	if (!ensure(ControlledTank)) {
+		return;
+	}
 
-	if (!ensure(PlayerTank) || !ensure(ControlledTank)) {
+	auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
+
+	if (!PlayerTank) {
+		// TODO: destroy other tanks when no player found
 		return;
 	}
 
@@ -33,23 +38,17 @@ void ATankAIController::SetPawn(APawn* InPawn) {
 	Super::SetPawn(InPawn);
 
 	if (!InPawn) {
-		UE_LOG(LogTemp, Warning, TEXT("SetPawn with no pawn!"));
 		return;
 	}
 
 	auto PossessedTank = Cast<ATank>(InPawn);
 	if (!ensure(PossessedTank)) {
-		UE_LOG(LogTemp, Warning, TEXT("Pawn is not ATank!"));
 		return;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("TankAI subscribing..."));
-
 	PossessedTank->OnTankDeath.AddUniqueDynamic(this, &ATankAIController::OnTankDeath);
-
-	UE_LOG(LogTemp, Warning, TEXT("TankAI subscribed to death!"));
 }
 
 void ATankAIController::OnTankDeath() {
-	UE_LOG(LogTemp, Warning, TEXT("Tank is dead! %s"));
+	GetPawn()->DetachFromControllerPendingDestroy();
 }
